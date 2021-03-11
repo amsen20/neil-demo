@@ -18,11 +18,16 @@ def issame(ins, data):
             return False
     return True
 
+def isbranch(instruction):
+    if len(instruction) != 3 or instruction[0] != "GOTO":
+        return False
+    return True
+
 def extract(instruction):
     if islabel(instruction):
         return {
             'type': "label",
-            'name': instruction[0][-1]
+            'name': instruction[0][:-1]
         }
     if isop(instruction):
         return {
@@ -30,6 +35,11 @@ def extract(instruction):
             'operation': instruction[0],
             'target': instruction[1],
             'args': instruction[2:]
+        }
+    if isbranch(instruction):
+        return {
+            'type': "branch",
+            'args': instruction[1:]
         }
     err("invalid syntax " + str(instruction))
 
@@ -42,7 +52,15 @@ def get_function(instruction):
             return func
     err("bad instruction: " + str(instruction))
 
-def get_env(instructions): # TODO
+def get_env(instructions):
+    labels = {}
+    for i in range(len(instructions)):
+        if islabel(instructions[i]):
+            label = extract(instructions[i])['name']
+            if label in labels:
+                err("same label duplication.")
+            labels[label] = i
     return {
-        "pc": 0
+        "pc": 0,
+        "labels": labels
     }

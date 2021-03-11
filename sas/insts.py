@@ -84,4 +84,17 @@ def __cmp(env, data):
         ret[ data['target'] ] = int(arg1 < arg2)
         return ret
     else:
-        err("set is not valid" + str(data))
+        err("set is not valid " + str(data))
+
+@register_instruction(type='branch')
+def __goto(env, data):
+    cond = get_val(env, data['args'][0])
+    label = data['args'][1]
+    if label not in env['labels']:
+        err("invalid line label " + label)
+    ret = env
+    if not cond:
+        ret['pc'] += 1
+    else:
+        ret['pc'] = env['labels'][label]
+    return ret

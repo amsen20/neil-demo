@@ -1,4 +1,7 @@
-SET a 20
+SET i 0
+SET sum 0
 1:
-SET b 10
-MUL c a b
+ADD i i 1
+ADD sum sum i
+CMP cond i 10
+GOTO cond 1

@@ -1,4 +1,5 @@
-import sys, core
+import sys
+import core
 
 filename = sys.argv[1]
 
@@ -20,10 +21,11 @@ for line in lines:
     if content:
         instructions.append(content)
 
+env = core.get_env(instructions)
+
 for i in range(len(instructions)):
     instructions[i] = core.get_function( instructions[i] )
 
-env = core.get_env(instructions)
 while env['pc'] < len(instructions):
     env = instructions[ env['pc'] ](env)
 

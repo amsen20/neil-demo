@@ -19,8 +19,7 @@ for line in lines:
     content = tmp
     if content:
         instructions.append(content)
-print(instructions)
-"""
+
 for i in range(len(instructions)):
     instructions[i] = core.get_function( instructions[i] )
 
@@ -29,4 +28,3 @@ while env['pc'] < len(instructions):
     env = instructions[ env['pc'] ](env)
 
 print(env)
-"""

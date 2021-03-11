@@ -1,0 +1,4 @@
+SET a 20
+1:
+SET b 10
+MUL c a b

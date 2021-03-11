@@ -3,7 +3,7 @@ from err import err
 from insts import instruction_set
 
 def islabel(instruction):
-    if len(instruction) == 1 and instruction[:-1] == ':':
+    if len(instruction) == 1 and instruction[0][-1] == ':':
         return True
     return False
 
@@ -14,7 +14,7 @@ def issame(ins, data):
     if ins['type'] != data['type']:
         return False
     if 'operation' in data:
-        if 'operation' not in ins or ins['operation'] == data['operation']:
+        if 'operation' not in ins or ins['operation'] != data['operation']:
             return False
     return True
 

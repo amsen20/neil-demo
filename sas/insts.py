@@ -1,10 +1,10 @@
 from err import err
 
-instruction_set = set()
+instruction_set = []
 
 def register_instruction(**kwargs):
     def decorator_register_instruction(func):
-        instruction_set.add({
+        instruction_set.append({
             **kwargs,
             'func': func
         })

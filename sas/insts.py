@@ -1,9 +1,9 @@
 from err import err
 
-instruction_set = []
+instructions_set = []
 
 def register_instruction(cls):
-    instruction_set.append(cls)
+    instructions_set.append(cls)
     return cls
 
 def get_val(env, val :str):

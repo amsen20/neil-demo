@@ -27,6 +27,7 @@ for i in range(len(instructions)):
     instructions[i] = core.get_function( instructions[i] )
 
 while env['pc'] < len(instructions):
-    env = instructions[ env['pc'] ](env)
+    f, cls = instructions[ env['pc'] ]
+    env = f(env)
 
 print(env)

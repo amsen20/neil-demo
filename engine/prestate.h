@@ -1,36 +1,46 @@
-#ifndef __DATA_H__
-#define __DATA_H__
+#ifndef __PRESTATE_H__
+#define __PRESTATE_H__
 
 #include <vector>
 #include <map>
 #include <string>
+#include <utility>
 
-struct Type{
+struct Box{
     bool solid;
     std::string name;
     std::vector<std::string> inputs, outputs;
+    Graph *graph;
 
-    Type(
+    Box():
+        solid(false), name(""), inputs({}), outputs({}), graph(NULL) {}
+    
+    Box(
         bool solid,
         std::string name,
         std::vector<std::string> inputs,
-        std::vector<std::string> outputs
+        std::vector<std::string> outputs,
+        Graph *graph=NULL
     ):
         solid(solid),
         name(name),
         inputs(inputs),
-        outputs(outputs)
+        outputs(outputs),
+        graph(graph)
         {}
 };
 
 struct Node{
-    std::string name;
-    Type *type;
-    std::vector<Node*> out;
+    Box *box;
+    std::vector<Pin> out;
+
+    Node(Box *box=NULL):
+        box(box) {}
+
 };
 
 struct Graph{
-    std::vector<Node*> nodes;
+    std::vector<Node*> nodes, sinks, sources;
 
     Graph(){
     }
@@ -41,10 +51,14 @@ struct Graph{
 
     Graph& operator = (const Graph &other){
         nodes = other.nodes;
+        sinks = other.sinks;
+        sources = other.sources;
         
         return *this;
     }
 
 };
+
+typedef std::pair<Node*, int> Pin;
 
 #endif

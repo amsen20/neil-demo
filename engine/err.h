@@ -3,15 +3,16 @@
 
 #include <iostream>
 
-void fin(const char *msg){
+void finish(const char *msg){
     std::cerr << msg << "\n";
     exit(0);
 }
 
-void ensuref(bool cond, const char *msg){
+template<typename ...Args>
+void ensuref(bool cond, Args&&... msg){
     if(cond)
         return;
-    fin(msg);
+    finish(get_str(msg));
 }
 
 #endif

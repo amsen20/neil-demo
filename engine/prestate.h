@@ -42,6 +42,11 @@ struct Node{
     Box *box;
     std::vector<Pin> out;
 
+    /*
+    * index: index in graph
+    * in_index: index in sources if it is an input pin for the graph
+    * out_index: same as in_index but for output pins
+    */
     int index, in_index, out_index;
 
     Node(Box *box=NULL, int index=-1, int in_index=-1, int out_index=-1):

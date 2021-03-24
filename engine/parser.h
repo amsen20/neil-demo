@@ -75,8 +75,6 @@ std::vector<Box*> parse(std::string path){
             Node *input = new Node(in_pin);
             input->out.push_back(Pin(NULL, -1));
             graph->add_node(input, true);
-            graph->nodes.push_back(input);
-            graph->sources.push_back(input);
             env[input_name] = {input, 0};
         }
 

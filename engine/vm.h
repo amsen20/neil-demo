@@ -71,7 +71,7 @@ void run(const std::vector<Box*> &boxes){
                 continue;
             }
             
-            if(node_clone->filled_inputs == node_clone->inputs.size()){
+            if(!box->sync || node_clone->filled_inputs == node_clone->inputs.size()){
                 auto outs = box->func(node_clone->inputs);
                 for(int i=0 ; i<outs.size() ; i++){
                     auto pin = node->out[i];

@@ -7,10 +7,15 @@
 #include <utility>
 #include <functional>
 
+struct Box;
+struct Node;
+struct Graph;
+
 typedef int Value;
+typedef std::pair<Node*, int> Pin;
 
 struct Box{
-    bool solid;
+    bool solid, sync;
     std::string name;
     std::vector<std::string> inputs, outputs;
     Graph *graph;
@@ -21,20 +26,22 @@ struct Box{
     std::function<std::vector<Value>(std::vector<Value>)> func;
 
     Box():
-        solid(false), name(""), inputs({}), outputs({}), graph(NULL) {}
+        solid(false), sync(true), name(""), inputs({}), outputs({}), graph(NULL) {}
     
     Box(
         bool solid,
         std::string name,
         std::vector<std::string> inputs,
         std::vector<std::string> outputs,
-        Graph *graph=NULL
+        Graph *graph=NULL,
+        bool sync=true
     ):
         solid(solid),
         name(name),
         inputs(inputs),
         outputs(outputs),
-        graph(graph)
+        graph(graph),
+        sync(sync)
         {}
 };
 
@@ -88,7 +95,5 @@ struct Graph{
     }
 
 };
-
-typedef std::pair<Node*, int> Pin;
 
 #endif

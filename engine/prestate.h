@@ -5,12 +5,20 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <functional>
+
+typedef int Value;
 
 struct Box{
     bool solid;
     std::string name;
     std::vector<std::string> inputs, outputs;
     Graph *graph;
+    
+    /*
+    * for solid boxes.
+    */
+    std::function<std::vector<Value>(std::vector<Value>)> func;
 
     Box():
         solid(false), name(""), inputs({}), outputs({}), graph(NULL) {}
@@ -34,8 +42,10 @@ struct Node{
     Box *box;
     std::vector<Pin> out;
 
-    Node(Box *box=NULL):
-        box(box) {}
+    int index, in_index, out_index;
+
+    Node(Box *box=NULL, int index=-1, int in_index=-1, int out_index=-1):
+        box(box), index(index), in_index(in_index), out_index(out_index) {}
 
 };
 
@@ -55,6 +65,21 @@ struct Graph{
         sources = other.sources;
         
         return *this;
+    }
+
+    void add_node(Node *node, bool in=false, bool out=false){
+        node->index = nodes.size();
+        nodes.push_back(node);
+        
+        if(in){
+            node->in_index = sources.size();
+            sources.push_back(node);
+        }
+        
+        if(out){
+            node->out_index = sinks.size();
+            sinks.push_back(node);
+        }
     }
 
 };

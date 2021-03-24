@@ -74,6 +74,7 @@ std::vector<Box*> parse(std::string path){
         for(auto input_name : box->inputs){
             Node *input = new Node(in_pin);
             input->out.push_back(Pin(NULL, -1));
+            graph->add_node(input, true);
             graph->nodes.push_back(input);
             graph->sources.push_back(input);
             env[input_name] = {input, 0};
@@ -92,7 +93,7 @@ std::vector<Box*> parse(std::string path){
             );
             auto box = types[gate_name];
             Node *cur = new Node(box);
-            graph->nodes.push_back(cur);
+            graph->add_node(cur);
             
             for(int i=0 ; i<box->inputs.size() ; i++){
                 Pin output_pin = env[ cline[ind ++] ];
@@ -108,8 +109,7 @@ std::vector<Box*> parse(std::string path){
 
         for(auto output_name : box->outputs){
             Node *output = new Node(out_pin);
-            graph->nodes.push_back(output);
-            graph->sinks.push_back(output);
+            graph->add_node(output, false, true);
             Pin output_pin = env[output_name];
             output_pin.first->out[ output_pin.second ] = {output, 0};
         }

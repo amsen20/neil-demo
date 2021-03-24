@@ -14,8 +14,9 @@
 #define IN "in"
 #define OUT "out"
 #define GATE "gate"
+#define MAIN "main"
 
-//PINS
+//pins
 #define IN_PIN "input-pin"
 #define OUT_PIN "output-pin"
 

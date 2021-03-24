@@ -13,11 +13,11 @@
 #include "prestate.h"
 #include "tools.h"
 
-std::map<Box*, Graph*> parse(std::string path){
+std::vector<Box*> parse(std::string path){
     std::fstream file(path, std::fstream::in);
     std::vector<std::string> code;
     std::map<std::string, Box*> types;
-    std::map<Box*, Graph*> box_to_graph;
+    std::vector<Box*> boxes;
 
     set_up(types);
 
@@ -69,6 +69,7 @@ std::map<Box*, Graph*> parse(std::string path){
         std::map<std::string, Pin> env; // wires
         auto box = types[ line[1] ];
         Graph *graph = new Graph();
+        box->graph = graph;
 
         for(auto input_name : box->inputs){
             Node *input = new Node(in_pin);
@@ -113,10 +114,10 @@ std::map<Box*, Graph*> parse(std::string path){
             output_pin.first->out[ output_pin.second ] = {output, 0};
         }
 
-        box_to_graph[box] = graph;
+        boxes.push_back(box);
     }
 
-    return box_to_graph;
+    return boxes;
 }
 
 #endif

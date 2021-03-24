@@ -24,9 +24,10 @@ struct NodeClone{
 
     NodeClone(Node *node=NULL, NodeClone *par=NULL):
         node(node), par(par) {
-            if(node != NULL){
-                for(auto child : get_box()->graph->nodes)
-                    childs.push_back(NULL);
+            if(node){
+                if(get_box()->graph)
+                    for(auto child : get_box()->graph->nodes)
+                        childs.push_back(NULL);
                 for(auto input : get_box()->inputs)
                     inputs.push_back(Value(-1));
             }

@@ -79,7 +79,7 @@ std::vector<Box*> parse(std::string path){
         }
 
         while(it < code.size()){
-            auto cline = split(code[it]);
+            auto cline = split(code[it ++]);
             int ind = 0;
             if(cline[ind ++] != GATE)
                 break;
@@ -100,6 +100,7 @@ std::vector<Box*> parse(std::string path){
             }
 
             for(int i=0 ; i<box->outputs.size() ; i++){
+                cur->out.push_back(Pin(NULL, -1));
                 Pin output_pin = {cur, i};
                 env[ cline[ind ++] ] = output_pin;
             }

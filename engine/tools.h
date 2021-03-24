@@ -12,7 +12,7 @@ std::string get_str(std::string s){
 
 template<typename ...Args>
 std::string get_str(std::string first, Args&&... msg){
-    return first + get_str(msg);
+    return first + get_str(msg...);
 }
 
 std::string to_str(int x){

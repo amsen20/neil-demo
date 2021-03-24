@@ -1,9 +1,12 @@
 #ifndef __ERR_H__
 #define __ERR_H__
 
-#include <iostream>
+#include "tools.h"
 
-void finish(const char *msg){
+#include <iostream>
+#include <string>
+
+void finish(std::string msg){
     std::cerr << msg << "\n";
     exit(0);
 }
@@ -12,7 +15,7 @@ template<typename ...Args>
 void ensuref(bool cond, Args&&... msg){
     if(cond)
         return;
-    finish(get_str(msg));
+    finish(get_str(msg...));
 }
 
 #endif

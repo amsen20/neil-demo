@@ -54,7 +54,6 @@ void run(const std::vector<Box*> &boxes){
             node_clone->inputs[pin_index] = value;
             node_clone->filled_inputs ++;
             
-            // TODO check inpin outpin
             if(box->name == OUT_PIN){
                 auto index = node_clone->node->out_index;
                 auto par_nc = node_clone->par;
@@ -87,7 +86,7 @@ void run(const std::vector<Box*> &boxes){
         }
         
         // not solid
-        auto inputn = box->graph->sinks[pin_index];
+        auto inputn = box->graph->sources[pin_index];
         auto pin = inputn->out.back();
         auto cln = clone_lazy(node_clone, pin.first);
 

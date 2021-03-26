@@ -1,0 +1,9 @@
+def main
+in a
+in b
+in c
+out d
+out e
+gate + a b d
+gate * b c f
+gate - d f e

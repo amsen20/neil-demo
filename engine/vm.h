@@ -66,7 +66,6 @@ void run(const std::vector<Box*> &boxes){
             );
             node_clone->inputs[pin_index] = value;
             node_clone->filled_inputs ++;
-            std::cerr << box->name << ": " << value << "\n";
             
             if(box->name == OUT_PIN){
                 auto index = node_clone->node->out_index;
@@ -76,24 +75,15 @@ void run(const std::vector<Box*> &boxes){
                     circuit_outs[index] = value;
                     continue;
                 }
-                
-                // auto pin = par_nc->node->out[index];
-                // auto cln = clone_lazy(par_nc->par, pin.first);
 
-                // que.push(Flow(value, ClonePin(cln, pin.second)));
                 flow_out(que, value, par_nc->node->out[index], par_nc->par);
                 continue;
             }
             
             if(!box->sync || node_clone->filled_inputs == node_clone->inputs.size()){
                 auto outs = box->func(node_clone->inputs);
-                for(int i=0 ; i<outs.size() ; i++){
-                    auto pin = node->out[i];
-                    // auto cln = clone_lazy(node_clone->par, pin.first);
-                    
-                    // que.push(Flow(outs[i], ClonePin(cln, pin.second)));
+                for(int i=0 ; i<outs.size() ; i++)
                     flow_out(que, outs[i], node->out[i], node_clone->par);
-                }
                 
                 continue;
             }
@@ -103,16 +93,12 @@ void run(const std::vector<Box*> &boxes){
         
         // not solid
         auto inputn = box->graph->sources[pin_index];
-        auto pin = inputn->out.back();
-        // auto cln = clone_lazy(node_clone, pin.first);
 
-        // que.push(Flow(value, ClonePin(cln, pin.second)));
         flow_out(que, value, inputn->out.back(), node_clone);
     }
 
     for(int i=0 ; i<main->outputs.size() ; i++)
-        std::cout << main->outputs[i] << ": " << circuit_outs[i] << " ";
-    std::cout << "\n";
+        std::cout << main->outputs[i] << ": " << circuit_outs[i] << "\n";
 }
 
 #endif

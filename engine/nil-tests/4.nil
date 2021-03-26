@@ -1,0 +1,14 @@
+def f
+in a
+in b
+out c
+gate * a b t
+gate + a b w
+gate - t w c
+def main
+in a
+in b
+out c
+gate + a b d
+gate f a b e
+gate + d e c

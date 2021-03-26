@@ -85,8 +85,10 @@ std::vector<Box*> parse(std::string path){
             std::string gate_name = cline[ind ++];
             ensuref(
                 types.count(gate_name),
-                "Box is not defined in line: ",
-                to_str(line_num)
+                "Box \"",
+                gate_name,
+                "\" is not defined in line: ",
+                to_str(it)
             );
             auto box = types[gate_name];
             Node *cur = new Node(box);

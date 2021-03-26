@@ -81,6 +81,9 @@ void run(const std::vector<Box*> &boxes){
             }
             
             if(!box->sync || node_clone->filled_inputs == node_clone->inputs.size()){
+                if(box->controller && !box->check(node_clone->inputs))
+                    continue;
+
                 auto outs = box->func(node_clone->inputs);
                 for(int i=0 ; i<outs.size() ; i++)
                     flow_out(que, outs[i], node->out[i], node_clone->par);

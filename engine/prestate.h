@@ -14,8 +14,16 @@ struct Graph;
 typedef int Value;
 typedef std::pair<Node*, int> Pin;
 
+const Value PLANE = -1;
+
 struct Box{
-    bool solid, sync;
+    /*
+    * Box's configuration.
+    * solid: it is atomic and does not divide to number of nodes.
+    * sync: it waits until all inputs filled.
+    * controller: it controles the flow.
+    */
+    bool solid, sync, controller;
     std::string name;
     std::vector<std::string> inputs, outputs;
     Graph *graph;
@@ -24,6 +32,7 @@ struct Box{
     * for solid boxes.
     */
     std::function<std::vector<Value>(std::vector<Value>)> func;
+    std::function<bool(std::vector<Value>)> check;
 
     Box():
         solid(false), sync(true), name(""), inputs({}), outputs({}), graph(NULL) {}
@@ -34,14 +43,16 @@ struct Box{
         std::vector<std::string> inputs,
         std::vector<std::string> outputs,
         Graph *graph=NULL,
-        bool sync=true
+        bool sync=true,
+        bool controller=false
     ):
         solid(solid),
         name(name),
         inputs(inputs),
         outputs(outputs),
         graph(graph),
-        sync(sync)
+        sync(sync),
+        controller(controller)
         {}
 };
 

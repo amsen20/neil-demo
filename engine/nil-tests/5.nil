@@ -1,0 +1,9 @@
+def main
+in a
+in b
+out c
+gate > a b d
+gate ! d e
+gate ? a e c1
+gate ? b d c2
+gate >- c1 c2 c

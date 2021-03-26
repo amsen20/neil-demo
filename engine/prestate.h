@@ -47,7 +47,7 @@ struct Box{
 
 struct Node{
     Box *box;
-    std::vector<Pin> out;
+    std::vector<std::vector<Pin>> out;
 
     /*
     * index: index in graph
@@ -56,8 +56,11 @@ struct Node{
     */
     int index, in_index, out_index;
 
-    Node(Box *box=NULL, int index=-1, int in_index=-1, int out_index=-1):
-        box(box), index(index), in_index(in_index), out_index(out_index) {}
+    Node(Box *box, int index=-1, int in_index=-1, int out_index=-1):
+        box(box), index(index), in_index(in_index), out_index(out_index) {
+            for(auto output : box->outputs)
+                out.push_back(std::vector<Pin>());
+        }
 
 };
 

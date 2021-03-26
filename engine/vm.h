@@ -15,6 +15,19 @@ NodeClone *clone_lazy(NodeClone *par, Node *node){
     return par->childs[node->index];
 }
 
+void flow_out(
+    Queue &que,
+    Value value,
+    const std::vector<Pin> &pins,
+    NodeClone *nc
+    )
+{
+    for(auto pin : pins){
+        auto cln = clone_lazy(nc, pin.first);
+        que.push(Flow(value, ClonePin(cln, pin.second)));
+    }
+}
+
 void run(const std::vector<Box*> &boxes){
     Box *main = NULL;
     for(auto box : boxes)
@@ -53,6 +66,7 @@ void run(const std::vector<Box*> &boxes){
             );
             node_clone->inputs[pin_index] = value;
             node_clone->filled_inputs ++;
+            std::cerr << box->name << ": " << value << "\n";
             
             if(box->name == OUT_PIN){
                 auto index = node_clone->node->out_index;
@@ -63,10 +77,11 @@ void run(const std::vector<Box*> &boxes){
                     continue;
                 }
                 
-                auto pin = par_nc->node->out[index];
-                auto cln = clone_lazy(par_nc->par, pin.first);
+                // auto pin = par_nc->node->out[index];
+                // auto cln = clone_lazy(par_nc->par, pin.first);
 
-                que.push(Flow(value, ClonePin(cln, pin.second)));
+                // que.push(Flow(value, ClonePin(cln, pin.second)));
+                flow_out(que, value, par_nc->node->out[index], par_nc->par);
                 continue;
             }
             
@@ -74,9 +89,10 @@ void run(const std::vector<Box*> &boxes){
                 auto outs = box->func(node_clone->inputs);
                 for(int i=0 ; i<outs.size() ; i++){
                     auto pin = node->out[i];
-                    auto cln = clone_lazy(node_clone->par, pin.first);
+                    // auto cln = clone_lazy(node_clone->par, pin.first);
                     
-                    que.push(Flow(outs[i], ClonePin(cln, pin.second)));
+                    // que.push(Flow(outs[i], ClonePin(cln, pin.second)));
+                    flow_out(que, outs[i], node->out[i], node_clone->par);
                 }
                 
                 continue;
@@ -88,9 +104,10 @@ void run(const std::vector<Box*> &boxes){
         // not solid
         auto inputn = box->graph->sources[pin_index];
         auto pin = inputn->out.back();
-        auto cln = clone_lazy(node_clone, pin.first);
+        // auto cln = clone_lazy(node_clone, pin.first);
 
-        que.push(Flow(value, ClonePin(cln, pin.second)));
+        // que.push(Flow(value, ClonePin(cln, pin.second)));
+        flow_out(que, value, inputn->out.back(), node_clone);
     }
 
     for(int i=0 ; i<main->outputs.size() ; i++)

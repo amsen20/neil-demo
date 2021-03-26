@@ -1,0 +1,16 @@
+def main
+in n
+out ans
+gate 1 n one
+gate + one one two
+gate > n one cc
+gate ! cc ncc
+gate ? n cc nn
+gate ? n ncc base
+gate 1 base ans-base
+gate - nn one nn1
+gate - nn two nn2
+gate main nn1 fnn1
+gate main nn2 fnn2
+gate + fnn1 fnn2 ans-rec
+gate >- ans-base ans-rec ans

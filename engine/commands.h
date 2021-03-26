@@ -11,6 +11,7 @@
 #define OR_n "|"
 #define NOT_n "!"
 #define CMP ">"
+#define ONE "1"
 
 // commands:
 #define CONN ">-"
@@ -27,7 +28,7 @@
 #define IN_PIN "input-pin"
 #define OUT_PIN "output-pin"
 
-Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *conn, *in_pin, *out_pin, *cond;
+Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *one, *conn, *in_pin, *out_pin, *cond;
 
 void set_up(std::map<std::string, Box*> &types){
     add = new Box(true, ADD, {"a", "b"}, {"c"});
@@ -70,6 +71,12 @@ void set_up(std::map<std::string, Box*> &types){
     types[cmp->name] = cmp;
     cmp->func = [](std::vector<Value> vec) -> std::vector<Value>{
         return {vec[0] > vec[1]};
+    };
+
+    one = new Box(true, ONE, {"a"}, {"c"});
+    types[one->name] = one;
+    one->func = [](std::vector<Value> vec) -> std::vector<Value>{
+        return {1};
     };
 
     conn = new Box(true, CONN, {"a", "b"}, {"c"});

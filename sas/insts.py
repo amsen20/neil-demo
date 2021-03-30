@@ -193,3 +193,52 @@ class Goto:
         else:
             ret['pc'] = env['labels'][label]
         return ret
+
+@register_instruction
+class Input:
+    @staticmethod
+    def extract(instruction):
+        return {
+            'cls': Input,
+            'arg': instruction[1]
+        }
+
+    @staticmethod
+    def check(instruction):
+        if len(instruction) != 2 or instruction[0] != "INPUT":
+            return False
+        return True
+
+    @staticmethod
+    def func(env, data):
+        var = data['arg']        
+        ret = env
+        ret[var] = int(input("Enter {}: ".format(var)))
+        ret['pc'] += 1
+        return ret
+
+@register_instruction
+class Print:
+    @staticmethod
+    def extract(instruction):
+        return {
+            'cls': Print,
+            'arg': instruction[1]
+        }
+
+    @staticmethod
+    def check(instruction):
+        if len(instruction) != 2 or instruction[0] != "PRINT":
+            return False
+        return True
+
+    @staticmethod
+    def func(env, data):
+        var = data['arg']
+        if var not in env:
+            err('variable "{}" not found.'.format(var))
+        
+        ret = env
+        print('{}: '.format(var) + str(ret[var]))
+        ret['pc'] += 1
+        return ret

@@ -29,5 +29,3 @@ for i in range(len(instructions)):
 while env['pc'] < len(instructions):
     f, cls = instructions[ env['pc'] ]
     env = f(env)
-
-print(env)

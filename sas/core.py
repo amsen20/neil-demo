@@ -10,16 +10,15 @@ def extract(instruction):
     err("invalid syntax " + str(instruction))
 
 def get_function(instruction):
-    data = extract(instruction)
     def func(env):
-        return data['cls'].func(env, data)
-    return func, data
+        return instruction['cls'].func(env, instruction)
+    return func, instruction
 
 def get_env(instructions):
     labels = {}
     for i in range(len(instructions)):
-        if Label.check(instructions[i]):
-            label = Label.extract(instructions[i])['name']
+        if instructions[i]['cls'] == Label:
+            label = instructions[i]['name']
             if label in labels:
                 err("same label duplication.")
             labels[label] = i

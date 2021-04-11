@@ -1,25 +1,7 @@
 import sys
-import core
+import core, sparser
 
-filename = sys.argv[1]
-
-with open(filename, "r") as f:
-    lines = f.read().split("\n")
-
-instructions = []
-
-for line in lines:
-    content = line.split()
-    tmp = []
-    for it in content:
-        if it.startswith("#"):
-            break
-        if not it.isspace():
-            tmp.append(it)
-        
-    content = tmp
-    if content:
-        instructions.append(content)
+instructions = sparser.parse(sys.argv[1])
 
 env = core.get_env(instructions)
 

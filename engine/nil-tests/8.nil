@@ -1,0 +1,6 @@
+def main
+in a
+in b
+out a
+gate + a b a
+gate * a b a

@@ -56,4 +56,5 @@ for var in outputs:
     neil += "out {}\n".format(var)
 neil += get_circuit(0)
 
-print(neil)
+with open("a.nil", "w") as f:
+    f.write(neil)

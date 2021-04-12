@@ -313,7 +313,7 @@ class Input:
 
     @staticmethod
     def get_vars(data):
-        return {}
+        return {data['arg']}
 
     @staticmethod
     def get_circuit(env, data):

@@ -1,0 +1,51 @@
+def A
+in i
+in cond
+in sum
+in n
+out i
+out cond
+out sum
+out n
+gate + i 1 i
+gate + sum i sum
+gate > n i cond
+gate ? i cond i-0
+gate ? cond cond cond-0
+gate ? sum cond sum-0
+gate ? n cond n-0
+gate A i-0 cond-0 sum-0 n-0 i-0 cond-0 sum-0 n-0
+gate ! cond not-cond-0
+gate ? i not-cond-0 i
+gate ? cond not-cond-0 cond
+gate ? sum not-cond-0 sum
+gate ? n not-cond-0 n
+gate >- i i-0 i
+gate >- cond cond-0 cond
+gate >- sum sum-0 sum
+gate >- n n-0 n
+def main
+in n
+const i -1
+const cond -1
+const sum -1
+out sum
+gate -> i 0 i
+gate -> sum 0 sum
+gate + i 1 i
+gate + sum i sum
+gate > n i cond
+gate ? i cond i-0
+gate ? cond cond cond-0
+gate ? sum cond sum-0
+gate ? n cond n-0
+gate A i-0 cond-0 sum-0 n-0 i-0 cond-0 sum-0 n-0
+gate ! cond not-cond-0
+gate ? i not-cond-0 i
+gate ? cond not-cond-0 cond
+gate ? sum not-cond-0 sum
+gate ? n not-cond-0 n
+gate >- i i-0 i
+gate >- cond cond-0 cond
+gate >- sum sum-0 sum
+gate >- n n-0 n

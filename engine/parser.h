@@ -132,7 +132,6 @@ std::vector<Box*> parse(std::string path){
 
         boxes.push_back(box);
     }
-
     return boxes;
 }
 

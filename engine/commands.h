@@ -16,11 +16,13 @@
 // commands:
 #define CONN ">-"
 #define COND "?"
+#define SET "->"
 
 // keywords
 #define DEF "def"
 #define IN "in"
 #define OUT "out"
+#define CONST "const"
 #define GATE "gate"
 #define MAIN "main"
 
@@ -28,7 +30,7 @@
 #define IN_PIN "input-pin"
 #define OUT_PIN "output-pin"
 
-Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *one, *conn, *in_pin, *out_pin, *cond;
+Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *one, *conn, *in_pin, *out_pin, *set_n, *cond;
 
 void set_up(std::map<std::string, Box*> &types){
     add = new Box(true, ADD, {"a", "b"}, {"c"});
@@ -87,6 +89,12 @@ void set_up(std::map<std::string, Box*> &types){
             return {vec[0]};
         else
             return {vec[1]};
+    };
+
+    set_n = new Box(true, SET, {"a", "b"}, {"c"});
+    types[set_n->name] = set_n;
+    set_n->func = [](std::vector<Value> vec) -> std::vector<Value>{
+        return {vec[1]};
     };
 
     cond = new Box(true, COND, {"a", "b"}, {"c"});

@@ -1,10 +1,10 @@
 INPUT n
 SET i 0
 SET sum 0
-1:
+A:
 ADD i i 1
 ADD sum sum i
 CMP cond i n
-GOTO cond 1
+GOTO cond A
 
 PRINT sum

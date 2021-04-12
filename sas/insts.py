@@ -1,4 +1,6 @@
+from os import stat
 from err import err
+from tools import get_ided
 
 instructions_set = []
 
@@ -37,6 +39,14 @@ class Label:
         ret['pc'] += 1
         return ret
 
+    @staticmethod
+    def get_vars(data):
+        return {}
+
+    @staticmethod
+    def get_circuit(env, data):
+        return "", env
+
 @register_instruction
 class Set:
     @staticmethod
@@ -62,6 +72,18 @@ class Set:
         else:
             err("set is not valid" + str(data))
 
+    @staticmethod
+    def get_vars(data):
+        return {data['target']}
+
+    @staticmethod
+    def get_circuit(env, data):
+        # TODO error checks
+        var = data['target']
+        arg = data['args'][0]
+        
+        return "gate -> {} {} {}\n".format(var, arg, var), env
+
 @register_instruction
 class Add:
     @staticmethod
@@ -86,7 +108,18 @@ class Add:
             ret[ data['target'] ] = arg1 + arg2
             return ret
         else:
-            err("set is not valid" + str(data))
+            err("add is not valid" + str(data))
+
+    @staticmethod
+    def get_vars(data):
+        return {data['target']}
+
+    @staticmethod
+    def get_circuit(env, data):
+        var = data['target']
+        arg1 = data['args'][0]
+        arg2 = data['args'][1]
+        return "gate + {} {} {}\n".format(arg1, arg2, var), env
 
 @register_instruction
 class Sub:
@@ -114,6 +147,17 @@ class Sub:
         else:
             err("set is not valid" + str(data))
 
+    @staticmethod
+    def get_vars(data):
+        return {data['target']}
+
+    @staticmethod
+    def get_circuit(env, data):
+        var = data['target']
+        arg1 = data['args'][0]
+        arg2 = data['args'][1]
+        return "gate - {} {} {}\n".format(arg1, arg2, var), env
+
 @register_instruction
 class Mul:
     @staticmethod
@@ -140,6 +184,17 @@ class Mul:
         else:
             err("set is not valid" + str(data))
 
+    @staticmethod
+    def get_vars(data):
+        return {data['target']}
+
+    @staticmethod
+    def get_circuit(env, data):
+        var = data['target']
+        arg1 = data['args'][0]
+        arg2 = data['args'][1]
+        return "gate * {} {} {}\n".format(arg1, arg2, var), env
+
 @register_instruction
 class Cmp:
     @staticmethod
@@ -165,6 +220,17 @@ class Cmp:
             return ret
         else:
             err("set is not valid" + str(data))
+
+    @staticmethod
+    def get_vars(data):
+        return {data['target']}
+
+    @staticmethod
+    def get_circuit(env, data):
+        var = data['target']
+        arg1 = data['args'][0]
+        arg2 = data['args'][1]
+        return "gate > {} {} {}\n".format(arg2, arg1, var), env
 
 @register_instruction
 class Goto:
@@ -194,6 +260,34 @@ class Goto:
             ret['pc'] = env['labels'][label]
         return ret
 
+    @staticmethod
+    def get_vars(data):
+        return {}
+
+    @staticmethod
+    def get_circuit(env, data):
+        ret = env # TODO deep copy
+        cond = data['args'][0]
+        label = data['args'][1]
+        
+        id = ret['wire-id']
+        ret['wire-id'] += 1
+        
+        code = ""
+        for var in ret['vars']:
+            code += "gate ? {} {} {}\n".format(var, cond, get_ided(var, id))
+        gate = "gate {} ".format(label)
+        for var in ret['vars']:
+            gate += get_ided(var, id) + " "
+        for var in ret['vars']:
+            gate += get_ided(var, id) + " "
+        gate = gate[:-1] + "\n"
+        code += gate
+        code += "gate ! {} not-cond-{}\n".format(cond, id)
+        for var in ret['vars']:
+            code += "gate ? {} not-cond-{} {}\n".format(var, id, var)
+        return code, env
+
 @register_instruction
 class Input:
     @staticmethod
@@ -216,6 +310,14 @@ class Input:
         ret[var] = int(input("Enter {}: ".format(var)))
         ret['pc'] += 1
         return ret
+
+    @staticmethod
+    def get_vars(data):
+        return {}
+
+    @staticmethod
+    def get_circuit(env, data):
+        return "", env
 
 @register_instruction
 class Print:
@@ -242,3 +344,11 @@ class Print:
         print('{}: '.format(var) + str(ret[var]))
         ret['pc'] += 1
         return ret
+
+    @staticmethod
+    def get_vars(data):
+        return {}
+
+    @staticmethod
+    def get_circuit(env, data):
+        return "", env

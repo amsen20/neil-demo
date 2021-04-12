@@ -29,8 +29,9 @@
 //pins
 #define IN_PIN "input-pin"
 #define OUT_PIN "output-pin"
+#define POWER_PIN "power-pin"
 
-Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *one, *conn, *in_pin, *out_pin, *set_n, *cond;
+Box *add, *sub, *mul, *and_n, *or_n, *not_n, *cmp, *one, *conn, *in_pin, *out_pin, *power_pin, *set_n, *cond;
 
 void set_up(std::map<std::string, Box*> &types){
     add = new Box(true, ADD, {"a", "b"}, {"c"});
@@ -112,6 +113,12 @@ void set_up(std::map<std::string, Box*> &types){
 
     out_pin = new Box(true, OUT_PIN, {"a"}, {});
     types[out_pin->name] = out_pin;
+
+    power_pin = new Box(true, POWER_PIN, {"a"}, {"b"});
+    types[power_pin->name] = power_pin;
+    power_pin->func = [](std::vector<Value> vec) -> std::vector<Value>{
+        return {vec[0]};
+    };
 }
 
 #endif

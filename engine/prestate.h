@@ -26,6 +26,7 @@ struct Box{
     bool solid, sync, controller;
     std::string name;
     std::vector<std::string> inputs, outputs;
+    std::vector<std::pair<std::string, Value>> consts;
     Graph *graph;
     
     /*
@@ -44,7 +45,8 @@ struct Box{
         std::vector<std::string> outputs,
         Graph *graph=NULL,
         bool sync=true,
-        bool controller=false
+        bool controller=false,
+        std::vector<std::pair<std::string, Value>> consts={}
     ):
         solid(solid),
         name(name),
@@ -52,7 +54,8 @@ struct Box{
         outputs(outputs),
         graph(graph),
         sync(sync),
-        controller(controller)
+        controller(controller),
+        consts(consts)
         {}
 };
 
@@ -77,6 +80,7 @@ struct Node{
 
 struct Graph{
     std::vector<Node*> nodes, sinks, sources;
+    std::vector<std::pair<Pin, Value> > initials;
 
     Graph(){
     }
@@ -89,6 +93,7 @@ struct Graph{
         nodes = other.nodes;
         sinks = other.sinks;
         sources = other.sources;
+        initials = other.initials;
         
         return *this;
     }

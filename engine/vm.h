@@ -9,14 +9,20 @@
 #include "commands.h"
 #include "err.h"
 
+Queue que; // TODO fix this, it is not PURE!!
+
+// constants must be used in either solid gate arguments or main, TODO fix it!
+void flow_initials(NodeClone*);
+
 NodeClone *clone_lazy(NodeClone *par, Node *node){
-    if(!par->childs[node->index])
+    if(!par->childs[node->index]){
         par->childs[node->index] = new NodeClone(node, par);
+        flow_initials(par->childs[node->index]);
+    }
     return par->childs[node->index];
 }
 
 void flow_out(
-    Queue &que,
     Value value,
     const std::vector<Pin> &pins,
     NodeClone *nc
@@ -28,7 +34,24 @@ void flow_out(
     }
 }
 
+void flow_initials(
+    NodeClone *nc
+)
+{
+    if(nc->get_box()->solid)
+        return;
+    for(auto it : nc->get_box()->graph->initials){
+        auto pin = it.first;
+        auto value = it.second;
+        auto cln = clone_lazy(nc, pin.first);
+        que.push(Flow(value, ClonePin(cln, pin.second)));
+    }
+}
+
 void run(const std::vector<Box*> &boxes){
+    while(!que.empty())
+        que.pop();
+
     Box *main = NULL;
     for(auto box : boxes)
         if(box->name == MAIN){
@@ -39,8 +62,8 @@ void run(const std::vector<Box*> &boxes){
 
     Node *mainn = new Node(main);
     NodeClone *mainc = new NodeClone(mainn);
+    flow_initials(mainc);
 
-    Queue que;
     std::vector<Value> circuit_outs(main->outputs.size());
 
     for(int i=0 ; i<main->inputs.size() ; i++){
@@ -76,7 +99,7 @@ void run(const std::vector<Box*> &boxes){
                     continue;
                 }
 
-                flow_out(que, value, par_nc->node->out[index], par_nc->par);
+                flow_out(value, par_nc->node->out[index], par_nc->par);
                 continue;
             }
             
@@ -86,7 +109,7 @@ void run(const std::vector<Box*> &boxes){
 
                 auto outs = box->func(node_clone->inputs);
                 for(int i=0 ; i<outs.size() ; i++)
-                    flow_out(que, outs[i], node->out[i], node_clone->par);
+                    flow_out(outs[i], node->out[i], node_clone->par);
                 
                 continue;
             }
@@ -97,7 +120,7 @@ void run(const std::vector<Box*> &boxes){
         // not solid
         auto inputn = box->graph->sources[pin_index];
 
-        flow_out(que, value, inputn->out.back(), node_clone);
+        flow_out(value, inputn->out.back(), node_clone);
     }
 
     for(int i=0 ; i<main->outputs.size() ; i++)

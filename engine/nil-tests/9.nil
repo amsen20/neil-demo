@@ -1,0 +1,8 @@
+def main
+in a
+in b
+const c 2
+out d
+gate -> a 2 a
+gate + a 1 a
+gate * a c d
